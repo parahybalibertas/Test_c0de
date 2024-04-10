@@ -1,0 +1,157 @@
+<! –– Basic HTML + CSS Calculator for importing goods from Japan To PL, exchange rate from Apr 10, 2024. ––>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Price Calculator</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e7ecf0;
+    margin: 0;
+    padding: 20px;
+  }
+  .calculator-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+  }
+  .calculator-container h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  .input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  .input-group input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #d5d5d5;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  .output-group p, .breakdown-group p {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
+  .output-group, .breakdown-group {
+    text-align: left;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 20px;
+  }
+  .breakdown-group {
+    background-color: #f1f1f1;
+  }
+</style>
+</head>
+<body>
+
+<div class="calculator-container">
+  <h2>Price Calculator</h2>
+  <div class="input-group">
+    <label for="price">Price (YEN):</label>
+    <input type="number" id="price" placeholder="Enter price in YEN">
+  </div>
+  <div class="input-group">
+    <label for="weight">Weight (grams):</label>
+    <input type="number" id="weight" placeholder="Enter weight in grams">
+  </div>
+  <button class="submit-btn" onclick="calculatePrice()">Calculate</button>
+  
+  <div class="output-group" id="output-container">
+    <p id="pricePLN">Total Price in PLN: </p>
+    <p id="priceUSD">Total Price in USD: </p>
+  </div>
+  
+  <div class="breakdown-group" id="breakdown-container">
+    <p id="basePrice">Base Price in PLN: </p>
+    <p id="taxAmount">26% Tax in PLN: </p>
+    <p id="fixedTax">Fixed Tax in PLN: </p>
+    <p id="shippingCost">Shipping Cost in PLN: </p>
+  </div>
+</div>
+
+<script>
+    // Example JavaScript function to calculate, display the price, and show the breakdown
+    function calculatePrice() {
+      // Constants for conversion
+      const YEN_PER_PLN = 40; // Conversion rate from YEN to PLN
+      const YEN_PER_USD = 152; // Conversion rate from YEN to USD
+      
+      // Getting user inputs
+      let priceYen = parseFloat(document.getElementById('price').value);
+      let weightGrams = parseFloat(document.getElementById('weight').value);
+      
+      // Convert weight from grams to kilograms for the calculation
+      let weightKg = weightGrams / 1000;
+      
+      // Adjusted weight
+      let adjustedWeight = weightKg * 1.25;
+      
+      // Calculate components in YEN
+      let taxAmountYEN = 0.26 * priceYen;
+      let fixedTaxYEN = (13 * YEN_PER_PLN) + (80 * adjustedWeight * YEN_PER_PLN); // Convert fixed rates to YEN
+      let shippingCostYEN = 10 * YEN_PER_PLN; // Convert shipping cost to YEN
+      
+      // Calculate total price in YEN
+      let totalPriceYEN = priceYen + taxAmountYEN + fixedTaxYEN + shippingCostYEN;
+      
+      // Convert YEN to PLN and USD for the total price
+      let pricePLN = (totalPriceYEN / YEN_PER_PLN).toFixed(2);
+      let priceUSD = (totalPriceYEN / YEN_PER_USD).toFixed(2);
+      
+      // Convert YEN to PLN and USD for the breakdown
+      let basePricePLN = (priceYen / YEN_PER_PLN).toFixed(2);
+      let taxAmountPLN = (taxAmountYEN / YEN_PER_PLN).toFixed(2);
+      let fixedTaxPLN = (fixedTaxYEN / YEN_PER_PLN).toFixed(2);
+      let shippingCostPLN = (shippingCostYEN / YEN_PER_PLN).toFixed(2);
+      
+      // Display output
+      document.getElementById('pricePLN').textContent = `Total Price in PLN: ${pricePLN}`;
+      document.getElementById('priceUSD').textContent = `Total Price in USD: ${priceUSD}`;
+      
+      // Display breakdown
+      document.getElementById('basePrice').textContent = `Base Price in PLN: ${basePricePLN}`;
+      document.getElementById('taxAmount').textContent = `26% Tax in PLN: ${taxAmountPLN}`;
+      document.getElementById('fixedTax').textContent = `Fixed Tax in PLN: ${fixedTaxPLN}`;
+      document.getElementById('shippingCost').textContent = `Shipping Cost in PLN: ${shippingCostPLN}`;
+      
+      document.getElementById('output-container').style.display = 'block';
+      document.getElementById('breakdown-container').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
